@@ -1,0 +1,30 @@
+An walkthrough of the Class Digram's structure. Please refer to the diagram while reading.
+
+  Basically our main class/controller will have a repository of dataSources, representing websites from which we get our dataSets. It maps a location, e.g. a city name,  input by the user to that city's
+open data source (e.g. DataSF), if it exists. Right now we will use a dataSet provided by Socrata to implement this functionality:
+https://opendata.socrata.com/dataset/Socrata-Customer-Spotlights/6wk3-4ija
+
+  A dataSource represents a city's open data source website and has a set of dataSets that it provides. Each dataSet,
+e.g. SFPD Incidents from DataSF (https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry), has
+a set of Fields, or column names. For example, SFPD Incidents has Incident Number, Category, Description, Time, etc. Each
+dataSet also has a set of tags consisting of the words in its title and the names of its Fields (a more sophisticated system
+of tags could be implemented in the future; perhaps we can get the description of a dataSet from a website like DataSF as well?). 
+These tags are used to find relevant dataSets when a user searches for a topic of interest, e.g. if a user searched for "SFPD,"
+SFPD Incidents would show as a relevant dataSet.
+
+  Each Field has a certain type: is it a text entry, a number entry, a percent entry, etc.? These types are used so that the API
+knows what kinds of Visualizations it can provide to the user with the Fields he/she is interested in. Each Visualization object
+will represent a different kind of graph, i.e. a bar graph, a pie chart, a map (GeoJSON), etc. Each graph requires a different
+number of fields and different types of fields. For example, a timeline may require 2 fields, one which must be a date/time
+and one which must be a number. These requirements are stored in the attributes fieldNum and fieldTypes. So when a user selects
+the fields he/she wants to analyze, the API can determine which Visualization types can be generated with those fields. And by 
+retrieving the actual data as a JSON Object using Socrata's API endpoint, d3 should be able to generate the actual graph.
+
+So the timeline of events looks like this:
+1) User searches for the location from which he/she wants data, i.e. San Francisco
+2) User then searches for a topic of interest, i.e. SFPD
+3) API returns the user a list of relevant dataSets
+4) User selects a dataSet that interests him/her, i.e. SFPD Incidents
+5) User selects Fields from that dataSet whose relationship he/she wants to visualize, i.e. Time and Category
+6) API returns the user a list of possible Visualization types, i.e. timeline
+7) Upon the user selecting a Visualization, API sends the relevant data as a JSONArray for the front-end to create a graph
