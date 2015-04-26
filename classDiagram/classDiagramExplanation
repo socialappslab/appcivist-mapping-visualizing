@@ -1,18 +1,19 @@
 An walkthrough of the Class Digram's structure. Please refer to the diagram while reading.
 
-  Basically our main class/controller will have a repository of dataSources, representing websites from which we get our dataSets. It maps a location, e.g. a city name,  input by the user to that city's
-open data source (e.g. DataSF), if it exists. Right now we will use a dataSet provided by Socrata to implement this functionality:
+  Basically our main class/controller will have a repository of dataSources, representing websites from which we get our dataSets. 
+It maps a location, e.g. a city name,  input by the user to that city's open data source (e.g. DataSF), if it exists. Right now 
+we will use a dataSet provided by Socrata to implement this functionality:
 https://opendata.socrata.com/dataset/Socrata-Customer-Spotlights/6wk3-4ija
 
   A dataSource represents a city's open data source website and has a set of dataSets that it provides. Each dataSet,
 e.g. SFPD Incidents from DataSF (https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry), has
 a set of Fields, or column names. For example, SFPD Incidents has Incident Number, Category, Description, Time, etc. Each
-dataSet also has a set of tags consisting of the words in its title and the names of its Fields (a more sophisticated system
+dataSet also can generate a set of tags consisting of the words in its title and the names of its Fields (a more sophisticated system
 of tags could be implemented in the future; perhaps we can get the description of a dataSet from a website like DataSF as well?). 
 These tags are used to find relevant dataSets when a user searches for a topic of interest, e.g. if a user searched for "SFPD,"
 SFPD Incidents would show as a relevant dataSet.
 
-  Each Field has a certain type: is it a text entry, a number entry, a percent entry, etc.? These types are used so that the API
+  Each Field has a certain type: is it a qualitative entry, an amount, a percent, etc.? These types are used so that the API
 knows what kinds of Visualizations it can provide to the user with the Fields he/she is interested in. Each Visualization object
 will represent a different kind of graph, i.e. a bar graph, a pie chart, a map (GeoJSON), etc. Each graph requires a different
 number of fields and different types of fields. For example, a timeline may require 2 fields, one which must be a date/time
