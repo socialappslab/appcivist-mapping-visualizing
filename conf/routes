@@ -7,8 +7,10 @@ GET     /                           			controllers.Application.index()
 
 # Get Datasource for a query, example "san+francisco"
 GET     /location/:query						controllers.Application.findLocation(query)
-
+# Get Datasets from a Datasource that are relevant to user's search query.
 GET		/search/:id/:query						controllers.Application.search(id: Long, query: String)
+# Get available Fields from a desired Dataset.
+GET /getFields/:dsourceid/:dsetid  				controllers.Application.getFields(dsourceid: Long, dsetid: Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               			controllers.Assets.at(path="/public", file)
